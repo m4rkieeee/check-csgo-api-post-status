@@ -8,7 +8,7 @@ python3 -m pip install -U discord.py
 
 python3 pip install beautifulsoup4
 
-pyton3 pip install python.dotenv
+python3 pip install python.dotenv
 
 Create a .env file with the following data:
 
