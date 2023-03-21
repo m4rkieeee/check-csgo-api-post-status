@@ -34,7 +34,7 @@ async def find_hidden_posts(starting_post_id, num_ids_to_check):
                 if status_code == 401:
                     found_401 = True
                     await notify_hidden_post(i)
-            await asyncio.sleep(2)
+            await asyncio.sleep(10)
 
         if found_401:
             current_post_id = i
