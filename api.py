@@ -17,20 +17,30 @@ channel_id = os.getenv('CHANNEL_ID')
 num_ids_to_check = 100
 
 async def find_hidden_posts(starting_post_id, num_ids_to_check):
+    current_post_id = starting_post_id
     while True:
         post_statuses = load_post_statuses()
-        for i in range(starting_post_id + 3, starting_post_id + num_ids_to_check + 1):
+        found_401 = False
+        for i in range(current_post_id + 1, current_post_id + num_ids_to_check + 1):
             print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} Checking post {i} for hidden data!')
             status_code = await check_for_updates(i)
+            if status_code == 429:
+                print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} checking hidden post has status code: 429. sleeping for 60 seconds.')
+                await asyncio.sleep(60)
             if status_code != 404 and i not in post_statuses and status_code != 429:
                 post_statuses[i] = status_code
                 print(f'found something: {post_statuses}')
                 save_post_statuses(post_statuses)
                 if status_code == 401:
+                    found_401 = True
                     await notify_hidden_post(i)
-            await asyncio.sleep(15)
-        await asyncio.sleep(60)
+            await asyncio.sleep(2)
 
+        if found_401:
+            current_post_id = i
+        else:
+            current_post_id = starting_post_id
+        await asyncio.sleep(60)
 
 async def notify_hidden_post(post_id, status_code):
     server = client.get_guild(int(os.getenv('SERVER_ID')))
