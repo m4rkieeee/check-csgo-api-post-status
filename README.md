@@ -13,8 +13,11 @@ pyton3 pip install python.dotenv
 Create a .env file with the following data:
 
 SERVER_ID=0123456789
+
 CHANNEL_ID=0123456789
+
 ROLE_ID=0123456789
+
 DISCORD_TOKEN=YOUR_BOT_TOKEN
 
 python3 api.py
